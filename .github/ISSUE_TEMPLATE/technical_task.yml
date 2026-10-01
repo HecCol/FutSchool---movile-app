@@ -1,0 +1,22 @@
+name: Tarea técnica
+description: Configuración, documentación, pruebas o mantenimiento.
+title: "chore: "
+body:
+  - type: textarea
+    id: objective
+    attributes:
+      label: Objetivo
+      description: Explica qué problema resuelve la tarea.
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Criterios de aceptación
+      placeholder: "- [ ] Resultado comprobable…"
+    validations:
+      required: true
+  - type: textarea
+    id: related
+    attributes:
+      label: Historias, archivos o tareas relacionadas
