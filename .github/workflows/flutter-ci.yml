@@ -1,0 +1,73 @@
+name: Flutter CI
+
+on:
+  push:
+    branches:
+      - main
+      - 'develop/**'
+      - 'fix/**'
+      - 'docs/**'
+      - 'chore/**'
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: flutter-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  quality:
+    name: Formato, analisis y pruebas
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: mobile
+    steps:
+      - name: Obtener codigo
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - name: Preparar Flutter
+        uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2
+        with:
+          channel: stable
+          flutter-version: '3.47.5'
+          cache: true
+      - name: Instalar dependencias
+        run: flutter pub get --enforce-lockfile
+      - name: Comprobar formato
+        run: dart format --output=none --set-exit-if-changed lib test
+      - name: Analizar codigo
+        run: flutter analyze
+      - name: Ejecutar pruebas
+        run: flutter test
+
+  android:
+    name: Compilar Android
+    needs: quality
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    defaults:
+      run:
+        working-directory: mobile
+    steps:
+      - name: Obtener codigo
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - name: Preparar Java
+        uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961 # v5
+        with:
+          distribution: temurin
+          java-version: '17'
+      - name: Preparar Flutter
+        uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2
+        with:
+          channel: stable
+          flutter-version: '3.47.5'
+          cache: true
+      - name: Instalar dependencias
+        run: flutter pub get --enforce-lockfile
+      - name: Compilar APK de depuracion
+        run: flutter build apk --debug

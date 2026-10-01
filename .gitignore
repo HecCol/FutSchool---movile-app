@@ -1,0 +1,29 @@
+# Archivos generados y configuración de cada equipo.
+**/.dart_tool/
+**/build/
+**/coverage/
+**/.pub-cache/
+**/.pub/
+**/.flutter-plugins-dependencies
+**/.idea/
+**/.kotlin/
+*.iml
+*.log
+.DS_Store
+Thumbs.db
+
+# Datos privados, credenciales y firma de aplicaciones.
+.env
+.env.*
+!.env.example
+**/local.properties
+**/key.properties
+*.jks
+*.keystore
+*.p12
+*.mobileprovision
+*.pem
+
+# Salidas y herramientas temporales; pubspec.lock sí se versiona.
+/tmp/
+/output/
